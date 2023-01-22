@@ -36,3 +36,5 @@ with engine.connect() as connection:
         session.add(e3)
 
         session.commit()
+
+print('Initializing Application completed.')
