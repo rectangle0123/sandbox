@@ -44,7 +44,10 @@ Dockerコンテナ起動時に下記のデータが投入される。
 フレームワーク
 - SQLAlchemy: PythonのORマッピングフレームワーク
 
-### ソースコード
+---
+
+## ソースコードについて
+### ファイル
 |ファイル名|説明|
 |--|--|
 |database.py|データベース定義|
@@ -53,9 +56,6 @@ Dockerコンテナ起動時に下記のデータが投入される。
 |setup.py|初期データ投入プログラム、Dockerコンテナ起動時に実行|
 |utils.py|memcached共通部品|
 
----
-
-## ソースコードについて
 ### Model（テーブル定義）
 ![models](https://user-images.githubusercontent.com/77914234/213900662-e0526784-d771-454c-b2d7-890fb4a3d443.png)
 
