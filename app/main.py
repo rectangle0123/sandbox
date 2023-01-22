@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from database import Base, engine 
 from models import Employee, Position
-from utils import memcached
+from utils import MemcachedUtils
 
 # セッション
 Session = sessionmaker(engine)
@@ -35,7 +35,7 @@ def search_by_name():
         if not name:
             continue
         # 入力があればキャッシュを探す
-        cached = memcached.get(name)
+        cached = MemcachedUtils.get(name)
         if cached:
             print('DEBUG: Found in memcached.')
             for e in cached:
@@ -49,7 +49,7 @@ def search_by_name():
                     print('該当するデータがありませんでした')
                     continue
                 # キャッシュに登録
-                memcached.set(name, employees)
+                MemcachedUtils.set(name, employees)
                 for e in employees:
                     print(e)
                 break
@@ -69,7 +69,7 @@ def search_by_years():
             print('年数を数字で入力してください')
             continue
         # タイムスタンプに変換できればキャッシュを探す
-        cached = memcached.get(str(years))
+        cached = MemcachedUtils.get(str(years))
         if cached:
             print('DEBUG: Found in memcached.')
             for e in cached:
@@ -83,7 +83,7 @@ def search_by_years():
                     print('該当するデータがありませんでした')
                     continue
                 # キャッシュに登録
-                memcached.set(str(years), employees)
+                MemcachedUtils.set(str(years), employees)
                 for e in employees:
                     print(e)
                 break
