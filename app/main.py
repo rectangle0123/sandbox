@@ -25,17 +25,23 @@ def main():
         print('\n')
         exit()
 
-def withsession(func):
-    """ DB接続デコレータ """
+def search_action(func):
+    """ 検索デコレータ """
     def wrapper(*args, **kwargs):
+        # セッション準備
         with engine.connect() as connection:
             with Session(bind=connection) as session:
-                func(session)
+                # 検索実施
+                items = func(session)
+                # 結果出力
+                for item in items:
+                    print(item)
     return wrapper
 
-@withsession
+@search_action
 def search_by_name(session: Session):
     """ 名前検索 """
+    employees = []
     while True:
         name = input('名前検索: 名前を入力してください > ')
         # 入力がない場合は検索しない
@@ -52,16 +58,16 @@ def search_by_name(session: Session):
         employees = session.query(Employee).filter(Employee.name.like(f'%\\{name}%', escape='\\')).all()
         if not employees:
             print('該当するデータがありませんでした')
-            continue
+            break
         # キャッシュに登録
         MemcachedUtils.set(name, employees)
-        for e in employees:
-            print(e)
         break
+    return employees
 
-@withsession
+@search_action
 def search_by_years(session: Session):
     """ 勤続年数 """
+    employees = []
     while True:
         years = input('勤続年検索: 年数を入力してください > ')
         # 入力がない場合は検索しない
@@ -84,12 +90,11 @@ def search_by_years(session: Session):
         employees = session.query(Employee).filter(Employee.joined_at <= threshold).all()
         if not employees:
             print('該当するデータがありませんでした')
-            continue
+            break
         # キャッシュに登録
         MemcachedUtils.set(str(years), employees)
-        for e in employees:
-            print(e)
         break
+    return employees
 
 
 if __name__ == '__main__':
