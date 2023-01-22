@@ -55,7 +55,8 @@ def search_by_name(session: Session):
                 print(e)
             break
         # キャッシュになければ検索する
-        employees = session.query(Employee).filter(Employee.name.like(f'%\\{name}%', escape='\\')).all()
+        name = name.replace('%', '\\%')
+        employees = session.query(Employee).filter(Employee.name.like(f'%{name}%', escape='\\')).all()
         if not employees:
             print('該当するデータがありませんでした')
             break
