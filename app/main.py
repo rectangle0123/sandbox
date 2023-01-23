@@ -51,8 +51,7 @@ def search_by_name(session: Session):
         cached = MemcachedUtils.get(name)
         if cached:
             print('DEBUG: Found in memcached.')
-            for e in cached:
-                print(e)
+            employees = cached
             break
         # キャッシュになければ検索する
         name = name.replace('%', '\\%')
@@ -84,8 +83,7 @@ def search_by_years(session: Session):
         cached = MemcachedUtils.get(str(years))
         if cached:
             print('DEBUG: Found in memcached.')
-            for e in cached:
-                print(e)
+            employees = cached
             break
         # キャッシュになければ検索する
         employees = session.query(Employee).filter(Employee.joined_at <= threshold).all()
